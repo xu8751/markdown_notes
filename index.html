@@ -1,0 +1,72 @@
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" >
+<head>
+  <title>Notebook</title>
+  <!-- Icons & Stylesheets -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+  <!-- Include the library in the page -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/marked"></script>
+  <script src="https://unpkg.com/moment"></script>
+  <!-- Notebook app -->
+  <div id="notebook">
+    <aside class="side-bar">
+      <div class="toolbar">
+        <button @click="addNote" :title="notes.length + 'note(s) already'"><i class="material-icons">add</i>Add note</button>
+      </div>
+      <div class="notes">
+          <div class="note" v-for="note of sortedNotes" @click="selectNote(note)" :class="{selected: note===selectedNote}">
+            <i class="material-icons" v-if="note.favorite">star</i>
+             {{note.title}}
+          </div>
+      </div>
+    </aside>
+    <template v-if="selectedNote">
+      <!-- Main pane -->
+      <section class="main">
+        <div class="toolbar">
+          <input v-model="selectedNote.title" placeholder="Note title">
+          <button @click="removeNote" title="Remove Note"><i class="material-icons">delete</i></button>
+          <button @click="favoriteNote" title="FavoriteNote"><i class="material-icons">{{selectedNote.favorite ? 'star' :'star_border'}}</i></button>
+        </div>
+        <label>
+          <textarea v-model="selectedNote.content"></textarea>
+        </label><br>
+
+        <div class="toolbar status-bar">
+          <span class="label">
+            Created
+          </span>
+          <span class="value">
+            {{selectedNote.created | data}}
+          </span>
+          <span class="lines">
+            <span class="label">Lines</span>
+            <span class="value">{{ linesCount }}</span>
+          </span>
+          <span class="words">
+            <span class="label">Words</span>
+            <span class="value">{{ wordsCount }}</span>
+          </span>
+          <span class="characters">
+            <span class="label">Characters</span>
+            <span class="value">{{ charactersCount }}</span>
+          </span>
+        </div>
+      </section>
+
+      <!-- Preview pane -->
+      <aside class="preview" v-html="notePreview">
+      </aside>
+    </template>
+
+
+  </div>
+
+  <!-- Some JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
